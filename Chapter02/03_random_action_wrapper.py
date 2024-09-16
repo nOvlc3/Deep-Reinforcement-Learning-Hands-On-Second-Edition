@@ -1,6 +1,7 @@
 import gym
 from typing import TypeVar
 import random
+import argparse
 
 Action = TypeVar('Action')
 
@@ -17,8 +18,16 @@ class RandomActionWrapper(gym.ActionWrapper):
         return action
 
 
+def getParser():
+    parser = argparse.ArgumentParser(description="Random Action Wrapper")
+    parser.add_argument('--epsilon', '-e',type=float, default=0.1, help="Random action probability")
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    env = RandomActionWrapper(gym.make("CartPole-v0"))
+    args = getParser()
+    env = RandomActionWrapper(gym.make("CartPole-v0"),
+                              epsilon=args.epsilon)
 
     obs = env.reset()
     total_reward = 0.0
@@ -29,4 +38,4 @@ if __name__ == "__main__":
         if done:
             break
 
-    print("Reward got: %.2f" % total_reward)
+    print(f"Reward got: {total_reward:.2f}")
